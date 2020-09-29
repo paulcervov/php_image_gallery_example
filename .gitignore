@@ -2,4 +2,8 @@
 .idea
 uploads/*
 !uploads/.gitkeep
+!uploads/test.jpg
+comments/*
+!comments/.gitkeep
+!comments/test.jpg.txt
 

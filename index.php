@@ -34,15 +34,13 @@ if (!empty($_FILES)) {
 
 }
 
-
+// Получаем список файлов, исключаем системные
 $files = scandir(UPLOAD_DIR);
 $files = array_filter($files, function ($file) {
     return !in_array($file, ['.', '..', '.gitkeep']);
 });
 
 ?>
-
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -53,7 +51,7 @@ $files = array_filter($files, function ($file) {
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Галерея изображений</title>
 </head>
 <body>
 <div class="container pt-4">
@@ -82,7 +80,7 @@ $files = array_filter($files, function ($file) {
                 <?php foreach($files as $key => $file): ?>
 
                     <div class="col-12 col-sm-3 mb-4">
-                        <a href="<?php echo URL . '/image.php?file=' . $file; ?>" title="Просмотр полного изображения" target="_blank">
+                        <a href="<?php echo URL . '/file.php?name=' . $file; ?>" title="Просмотр полного изображения">
                             <img src="<?php echo URL . '/' . UPLOAD_DIR . '/' . $file ?>" class="img-thumbnail" alt="<?php echo $file; ?>">
                         </a>
                     </div>
@@ -100,7 +98,7 @@ $files = array_filter($files, function ($file) {
 
 
     <!-- Форма загрузки файлов -->
-    <form action="<?php echo URL; ?>" method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
         <div class="custom-file">
             <input type="file" class="custom-file-input" name="files[]" id="customFile" multiple required>
             <label class="custom-file-label" for="customFile" data-browse="Выбрать">Выберите файлы</label>
@@ -111,7 +109,6 @@ $files = array_filter($files, function ($file) {
         </div>
         <hr>
         <button type="submit" class="btn btn-primary">Загрузить</button>
-        <a href="<?php echo URL; ?>" class="btn btn-secondary ml-3">Сброс</a>
     </form>
 </div><!-- /.container -->
 
