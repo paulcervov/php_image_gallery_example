@@ -35,7 +35,7 @@ if (!empty($_FILES)) {
 }
 
 
-$files = scandir(UPLOAD_DIR); // получаем массив содержимого папки
+$files = scandir(UPLOAD_DIR);
 $files = array_filter($files, function ($file) {
     return !in_array($file, ['.', '..', '.gitkeep']);
 });
@@ -76,20 +76,26 @@ $files = array_filter($files, function ($file) {
 
 
     <!-- Вывод изображений -->
-    <div class="row mb-4">
-        <?php foreach($files as $key => $file): ?>
+    <div class="mb-4">
+        <?php if(!empty($files)): ?>
+            <div class="row">
+                <?php foreach($files as $key => $file): ?>
 
-            <div class="col-12 col-sm-3 mb-3">
-                <a href="<?php echo URL . '/image.php?file=' . $file; ?>" title="Просмотр полного изображения" target="_blank">
-                    <img src="<?php echo URL . '/' . UPLOAD_DIR . '/' . $file ?>" class="rounded float-left img-fluid" alt="<?php echo $file; ?>">
-                </a>
+                    <div class="col-12 col-sm-3 mb-4">
+                        <a href="<?php echo URL . '/image.php?file=' . $file; ?>" title="Просмотр полного изображения" target="_blank">
+                            <img src="<?php echo URL . '/' . UPLOAD_DIR . '/' . $file ?>" class="img-thumbnail" alt="<?php echo $file; ?>">
+                        </a>
+                    </div>
+
+                    <?php if( (($key + 1) <= 0) ): ?>
+                        <div class="w-100"></div>
+                    <?php endif; ?>
+
+                <?php endforeach; ?>
             </div>
-
-            <?php if( (($key + 1) <= 0) ): ?>
-                <div class="w-100"></div>
-            <?php endif; ?>
-
-        <?php endforeach; ?>
+        <?php else: ?>
+            <div class="alert alert-secondary">Нет загруженных изображений</div>
+        <?php endif; ?>
     </div>
 
 
@@ -115,5 +121,11 @@ $files = array_filter($files, function ($file) {
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input@1.3.4/dist/bs-custom-file-input.min.js"></script>
+<script>
+    $(() => {
+        bsCustomFileInput.init();
+    });
+</script>
 </body>
 </html>
