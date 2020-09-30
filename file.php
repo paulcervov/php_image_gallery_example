@@ -20,9 +20,10 @@ if(!empty($_POST['comment'])) {
     // Если нет ошибок записываем коммент
     if(empty($errors)) {
 
-        // Чистим текст, земеняем переносы строк на <br/>
+        // Чистим текст, земеняем переносы строк на <br/>, дописываем дату
         $comment = strip_tags($comment);
         $comment = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$comment);
+        $comment = date('d.m.y H:i') . ': ' . $comment;
 
         // Дописываем текст в файл (будет создан, если еще не существует)
         file_put_contents($commentFilePath,  $comment . "\n", FILE_APPEND);
