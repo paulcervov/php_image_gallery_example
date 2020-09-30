@@ -24,7 +24,7 @@ if(!empty($_POST['comment'])) {
 
         // Чистим текст, земеняем переносы строк на <br/>, дописываем дату
         $comment = strip_tags($comment);
-        $comment = str_replace(["\r\n","\r","\n","\\r","\\n","\\r\\n"],"<br/>",$comment);
+        $comment = str_replace(PHP_EOL,"<br/>",$comment);
         $comment = date('d.m.y H:i') . ': ' . $comment;
 
         // Дописываем текст в файл (будет создан, если еще не существует)
