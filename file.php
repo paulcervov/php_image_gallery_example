@@ -4,11 +4,12 @@ define('UPLOAD_DIR', 'uploads');
 define('COMMENT_DIR', 'comments');
 
 $errors = [];
+$messages = [];
 
 $imageFileName = $_GET['name'];
 $commentFilePath = COMMENT_DIR . '/' . $imageFileName . '.txt';
 
-// Если была отправлена форма
+// Если коммент был отправлен
 if(!empty($_POST['comment'])) {
 
     $comment = trim($_POST['comment']);
@@ -21,10 +22,12 @@ if(!empty($_POST['comment'])) {
     // Если нет ошибок записываем коммент
     if(empty($errors)) {
         file_put_contents($commentFilePath, $comment, FILE_APPEND);
+
+        $messages[] = 'Комментарий был добавлен';
     }
 }
 
-// Получаем список коммантов
+// Получаем список комментов
 $comments = file_exists($commentFilePath)
     ? file($commentFilePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)
     : [];
@@ -53,20 +56,15 @@ $comments = file_exists($commentFilePath)
             <a href="<?php echo URL;  ?>">&larr; Главная</a>
             <h1 class="mb-4">Файл <?php echo $imageFileName; ?></h1>
 
-            <!-- Вывод сообщений об успехе/ошибке -->
-            <?php if (!empty($errors)): ?>
-                <div class="alert alert-danger">
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
 
-            <?php if (!empty($_POST['comment']) && empty($errors)): ?>
-                <div class="alert alert-success">Комментарий успешно добавлен</div>
-            <?php endif; ?>
+            <!-- Вывод сообщений об успехе/ошибке -->
+            <?php foreach ($errors as $error): ?>
+                <div class="alert alert-danger"><?php echo $error; ?></div>
+            <?php endforeach; ?>
+
+            <?php foreach ($messages as $message): ?>
+                <div class="alert alert-success"><?php echo $message; ?></div>
+            <?php endforeach; ?>
 
             <img src="<?php echo URL . '/' . UPLOAD_DIR . '/' . $imageFileName ?>" class="img-thumbnail mb-4"
                  alt="<?php echo $imageFileName ?>">
@@ -91,11 +89,10 @@ $comments = file_exists($commentFilePath)
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-primary">Отправить</button>
+                <a href="<?php echo URL; ?>" class="btn btn-secondary ml-3">Сброс</a>
             </form>
-
         </div>
-    </div>
-
+    </div><!-- /.row -->
 
 </div><!-- /.container -->
 
