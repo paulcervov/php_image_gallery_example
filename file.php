@@ -1,7 +1,5 @@
 <?php
-define('URL', 'http://localhost:8080'); // URL текущей страницы
-define('UPLOAD_DIR', 'uploads');
-define('COMMENT_DIR', 'comments');
+require 'config.php';
 
 $errors = [];
 $messages = [];
@@ -21,7 +19,13 @@ if(!empty($_POST['comment'])) {
 
     // Если нет ошибок записываем коммент
     if(empty($errors)) {
-        file_put_contents($commentFilePath, $comment, FILE_APPEND);
+
+        // Чистим текст, земеняем переносы строк на <br/>
+        $comment = strip_tags($comment);
+        $comment = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$comment);
+
+        // Дописываем текст в файл (будет создан, если еще не существует)
+        file_put_contents($commentFilePath,  $comment . "\n", FILE_APPEND);
 
         $messages[] = 'Комментарий был добавлен';
     }
@@ -51,35 +55,33 @@ $comments = file_exists($commentFilePath)
 
 <div class="container pt-4">
 
+    <h1 class="mb-4"><a href="<?php echo URL; ?>">Галерея изображений</a></h1>
+
+    <!-- Вывод сообщений об успехе/ошибке -->
+    <?php foreach ($errors as $error): ?>
+        <div class="alert alert-danger"><?php echo $error; ?></div>
+    <?php endforeach; ?>
+
+    <?php foreach ($messages as $message): ?>
+        <div class="alert alert-success"><?php echo $message; ?></div>
+    <?php endforeach; ?>
+
+    <h2 class="mb-4">Файл <?php echo $imageFileName; ?></h2>
+
     <div class="row">
-        <div class="col-12 col-sm-6 offset-sm-3">
-            <a href="<?php echo URL;  ?>">&larr; Главная</a>
-            <h1 class="mb-4">Файл <?php echo $imageFileName; ?></h1>
-
-
-            <!-- Вывод сообщений об успехе/ошибке -->
-            <?php foreach ($errors as $error): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
-            <?php endforeach; ?>
-
-            <?php foreach ($messages as $message): ?>
-                <div class="alert alert-success"><?php echo $message; ?></div>
-            <?php endforeach; ?>
+        <div class="col-12 col-sm-8 offset-sm-2">
 
             <img src="<?php echo URL . '/' . UPLOAD_DIR . '/' . $imageFileName ?>" class="img-thumbnail mb-4"
                  alt="<?php echo $imageFileName ?>">
 
             <h3>Комментарии</h3>
-
             <?php if(!empty($comments)): ?>
-                <?php foreach ($comments as $comment): ?>
-                    <p><?php echo $comment; ?></p>
+                <?php foreach ($comments as $key => $comment): ?>
+                    <p class="<?php echo (($key % 2) > 0) ? 'bg-light' : ''; ?>"><?php echo $comment; ?></p>
                 <?php endforeach; ?>
             <?php else: ?>
                 <p class="text-muted">Пока ни одного коммантария, будте первым!</p>
             <?php endif; ?>
-
-
 
             <!-- Форма добавления комментария -->
             <form method="post">
@@ -89,7 +91,6 @@ $comments = file_exists($commentFilePath)
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-primary">Отправить</button>
-                <a href="<?php echo URL; ?>" class="btn btn-secondary ml-3">Сброс</a>
             </form>
         </div>
     </div><!-- /.row -->

@@ -1,13 +1,7 @@
 <?php
-
-define('URL', 'http://localhost:8080'); // URL текущей страницы
-define('UPLOAD_MAX_SIZE', 1000000); // 1mb
-define('ALLOWED_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
-define('UPLOAD_DIR', 'uploads');
-define('COMMENT_DIR', 'comments');
+require 'config.php';
 
 $errors = [];
-
 $messages = [];
 
 // Если файл был отправлен
@@ -80,11 +74,11 @@ $files = array_filter($files, function ($file) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Галерея изображений</title>
+    <title>Галерея изображений | Список файлов</title>
 </head>
 <body>
 <div class="container pt-4">
-    <h1 class="mb-4">Галерея изображений</h1>
+    <h1 class="mb-4"><a href="<?php echo URL; ?>">Галерея изображений</a></h1>
 
     <!-- Вывод сообщений об успехе/ошибке -->
     <?php foreach ($errors as $error): ?>
@@ -94,6 +88,8 @@ $files = array_filter($files, function ($file) {
     <?php foreach ($messages as $message): ?>
         <div class="alert alert-success"><?php echo $message; ?></div>
     <?php endforeach; ?>
+
+    <h2>Список файлов</h2>
 
     <!-- Вывод изображений -->
     <div class="mb-4">
@@ -138,7 +134,6 @@ $files = array_filter($files, function ($file) {
         </div>
         <hr>
         <button type="submit" class="btn btn-primary">Загрузить</button>
-        <a href="<?php echo URL; ?>" class="btn btn-secondary ml-3">Сброс</a>
     </form>
 </div><!-- /.container -->
 
