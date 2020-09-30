@@ -56,11 +56,12 @@ if (!empty($_POST['name'])) {
     $messages[] = 'Файл был удален';
 }
 
-// Получаем список файлов, исключаем системные
+// Получаем список файлов, исключаем системные, сбрасываем ключи
 $files = scandir(UPLOAD_DIR);
 $files = array_filter($files, function ($file) {
     return !in_array($file, ['.', '..', '.gitkeep']);
 });
+$files = array_values($files);
 
 ?>
 <!doctype html>
@@ -110,7 +111,8 @@ $files = array_filter($files, function ($file) {
                         </a>
                     </div>
 
-                    <?php if ((($key + 1) <= 0)): ?>
+                    <!-- Если конец строки -->
+                    <?php if( (($key + 1) % 4) === 0 ): ?>
                         <div class="w-100"></div>
                     <?php endif; ?>
 

@@ -13,16 +13,18 @@ if(!empty($_POST['comment'])) {
     $comment = trim($_POST['comment']);
 
     // Валидация коммента
-    if(!$comment) {
+    if($comment === '') {
         $errors[] = 'Вы не ввели текст комментария';
     }
+
+    // ... другие проверки
 
     // Если нет ошибок записываем коммент
     if(empty($errors)) {
 
         // Чистим текст, земеняем переносы строк на <br/>, дописываем дату
         $comment = strip_tags($comment);
-        $comment = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$comment);
+        $comment = str_replace(["\r\n","\r","\n","\\r","\\n","\\r\\n"],"<br/>",$comment);
         $comment = date('d.m.y H:i') . ': ' . $comment;
 
         // Дописываем текст в файл (будет создан, если еще не существует)
